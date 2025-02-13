@@ -15,4 +15,4 @@ ENV PYTHONPATH "/app/"
 ENV PYTHONUNBUFFERED 1
 
 # Run the target application
-CMD [ "python3", "data_fetcher.py" ]
+CMD [ "python3", "system_monitoring.py" ]

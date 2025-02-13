@@ -17,13 +17,10 @@ def on_message(client, userdata, message):
     message_descriptor = MessageDescriptor(**json.loads(message_payload))
 
     # Gestione dei dati del sensore ambientale
-    if "environment" in message.topic:
-        print(f"Received IoT Message: Topic: {message.topic} "
-              f"Timestamp: {message_descriptor.timestamp} "
-              f"Type: {message_descriptor.type} "
-              f"Temperature: {message_descriptor.value['temperature']} "
-              f"Humidity: {message_descriptor.value['humidity']} "
-              f"Rain Probability: {message_descriptor.value['rain_probability']}")
+    if mqtt.topic_matches_sub( target_topic_environment_filter, message.topic):
+        print(f"Received IoT Message: Topic: {message.topic} ")
+        print(f"Temperature: {message_descriptor.value} ")
+            
     
     # Gestione dei dati del sensore GPS
     elif "gps" in message.topic:
@@ -47,7 +44,7 @@ client_id = "clientId0001-Consumer"
 broker_ip = "127.0.0.1"
 broker_port = 1883
 # Filtri aggiornati per i dati ambientali, GPS e di elaborazione immagine
-target_topic_environment_filter = "device/+/environment"
+target_topic_environment_filter = "drone/+/telemetry/env"
 target_topic_gps_filter = "device/+/gps"
 target_topic_image_processing_filter = "device/+/image_processing"  # Nuovo filtro per il sensore di elaborazione immagine
 message_limit = 1000
