@@ -1,3 +1,4 @@
+version: '3.8'
 
 services:
 
@@ -7,31 +8,31 @@ services:
     ports:
       - "1883:1883"
     volumes:
-      - .\mosquitto.conf:\mosquitto\config\mosquitto.conf
-      - .\data:\mosquitto\data
-      - .\log:\mosquitto\log
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./data:/mosquitto/data
+      - ./log:/mosquitto/log
     restart: always
     networks:
       - iot_network
 
   http-inventory-api:
-    container_name: http-inventory-api
-    image: http_iot_inventory_api:0.1
+    container_name: http-inventory-api-lab
+    image: http_iot_inventory_api_lab:0.1
     ports:
       - "7070:7070"
     volumes:
-      - .\target_api_conf.yaml:\app\conf.yaml
+      - ./target_api_conf.yaml:/app/conf.yaml
     restart: always
     networks:
       - iot_network
 
   web-ui:
-    container_name: web-ui
-    image: web-ui:0.1
+    container_name: web-ui-lab
+    image: web-ui-lab:0.1
     ports:
       - "7071:7071"
     volumes:
-      - .\target_web_conf.yaml:\app\web_conf.yaml
+      - ./target_web_conf.yaml:/app/web_conf.yaml
     restart: always
     depends_on:
       - http-inventory-api
@@ -39,10 +40,10 @@ services:
       - iot_network
   
   mqtt_data_fetcher:
-    container_name: mqtt_data_fetcher
-    image: mqtt_data_fetcher:0.1
+    container_name: mqtt_data_fetcher_lab
+    image: mqtt_data_fetcher_lab:0.1
     volumes:
-      - .\target_fetcher_conf.yaml:\app\fetcher_conf.yaml
+      - ./target_fetcher_conf.yaml:/app/fetcher_conf.yaml
     restart: always
     depends_on:
       - my-mosquitto-broker
