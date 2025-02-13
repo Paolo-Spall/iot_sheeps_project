@@ -48,3 +48,4 @@ for message_id in range(message_limit):
     time.sleep(5)
 
 mqtt_client.loop_stop()
+#http://127.0.0.1:7071/device/test_device_1/telemetry
