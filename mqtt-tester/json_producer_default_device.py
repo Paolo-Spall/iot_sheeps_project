@@ -1,7 +1,9 @@
 # For this example we rely on the Paho MQTT Library for Python
 # You can install it through the following command: pip install paho-mqtt
 
-from model.temperature_sensor import TemperatureSensor
+from model.environmental_sensor import EnvironmentalSensor
+from model.gps_sensor import GPSSensor  # Aggiunto il sensore GPS
+from model.image_processing_system import ImageProcessingSensor  # Aggiunto il nuovo sensore
 from model.message_descriptor import MessageDescriptor
 import paho.mqtt.client as mqtt
 import time
@@ -11,41 +13,83 @@ import time
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
 
-# Full MQTT client creation with all the parameters. The only one mandatory in the ClientId that should be unique
-# mqtt_client = Client(client_id="", clean_session=True, userdata=None, protocol=MQTTv311, transport=”tcp”)
-
 
 # Configuration variables
 device_id = "d0001"
 client_id = "clientId0001-Producer"
 broker_ip = "127.0.0.1"
 broker_port = 1883
-default_topic = "device/{}/temperature".format(device_id)
+default_topic_environment = f"device/{device_id}/environment"
+default_topic_gps = f"device/{device_id}/gps"  # Nuovo topic per il GPS
+default_topic_image_processing = f"device/{device_id}/image_processing"  # Nuovo topic per il sensore di elaborazione immagine
 message_limit = 1000
 
 mqtt_client = mqtt.Client(client_id)
 mqtt_client.on_connect = on_connect
 
-print("Connecting to "+ broker_ip + " port: " + str(broker_port))
+print("Connecting to " + broker_ip + " port: " + str(broker_port))
 mqtt_client.connect(broker_ip, broker_port)
 
 mqtt_client.loop_start()
 
-# Create Demo Temperature Sensor
-temperature_sensor = TemperatureSensor()
-
-# MQTT Paho Publish method with all the available parameters
-# mqtt_client.publish(topic, payload=None, qos=0, retain=False)
+# Crea i sensori
+environmental_sensor = EnvironmentalSensor()
+gps_sensor = GPSSensor()  # Creazione del sensore GPS
+image_processing_sensor = ImageProcessingSensor()  # Creazione del sensore di elaborazione immagine
 
 for message_id in range(message_limit):
-    temperature_sensor.measure_temperature()
-    payload_string = MessageDescriptor(int(time.time()),
-                                       "TEMPERATURE_SENSOR",
-                                       temperature_sensor.temperature_value).to_json()
-    infot = mqtt_client.publish(default_topic, payload_string)
-    infot.wait_for_publish()
-    print(f"Message Sent: {message_id} Topic: {default_topic} Payload: {payload_string}")
+    environmental_sensor.measure_environment()  # Acquisisce nuovi dati ambientali
+    sensor_data_environment = environmental_sensor.get_data()
+
+    gps_sensor.measure_position()  # Acquisisce nuove coordinate GPS
+    sensor_data_gps = {
+        'x': gps_sensor.x_position,
+        'y': gps_sensor.y_position,
+        'z': gps_sensor.z_position,
+        'timestamp': gps_sensor.timestamp
+    }
+
+    image_processing_sensor.measure_distance()  # Acquisisce la distanza dal centro del gregge
+    sensor_data_image_processing = {
+        'distance': image_processing_sensor.distance_to_flock_center,
+        'unit': image_processing_sensor.unit_of_measurement,
+        'timestamp': image_processing_sensor.timestamp
+    }
+
+    # Creazione del payload per i dati ambientali
+    payload_string_environment = MessageDescriptor(
+        int(time.time()),
+        "ENVIRONMENTAL_SENSOR",
+        sensor_data_environment
+    ).to_json()
+
+    # Creazione del payload per i dati GPS
+    payload_string_gps = MessageDescriptor(
+        int(time.time()),
+        "GPS_SENSOR",
+        sensor_data_gps
+    ).to_json()
+
+    # Creazione del payload per i dati di elaborazione immagine
+    payload_string_image_processing = MessageDescriptor(
+        int(time.time()),
+        "IMAGE_PROCESSING_SENSOR",
+        sensor_data_image_processing
+    ).to_json()
+
+    # Pubblica i dati
+    infot_environment = mqtt_client.publish(default_topic_environment, payload_string_environment)
+    infot_environment.wait_for_publish()
+    print(f"Message Sent: {message_id} Topic: {default_topic_environment} Payload: {payload_string_environment}")
+
+    infot_gps = mqtt_client.publish(default_topic_gps, payload_string_gps)
+    infot_gps.wait_for_publish()
+    print(f"Message Sent: {message_id} Topic: {default_topic_gps} Payload: {payload_string_gps}")
+
+    infot_image_processing = mqtt_client.publish(default_topic_image_processing, payload_string_image_processing)
+    infot_image_processing.wait_for_publish()
+    print(f"Message Sent: {message_id} Topic: {default_topic_image_processing} Payload: {payload_string_image_processing}")
+
     time.sleep(5)
 
 mqtt_client.loop_stop()
-#http://127.0.0.1:7071/device/d0001/telemetry
