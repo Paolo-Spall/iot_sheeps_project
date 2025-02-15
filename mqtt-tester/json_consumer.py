@@ -40,7 +40,7 @@ def on_message(client, userdata, message):
               f"Unit: {message_descriptor.value['unit']}")
 
 # Configuration variables
-client_id = "clientId0001-Consumer"
+client_id = "clientId0002-Consumer"
 broker_ip = "127.0.0.1"
 broker_port = 1883
 # Filtri aggiornati per i dati ambientali, GPS e di elaborazione immagine

@@ -1,7 +1,12 @@
 import json
-import requests
 import paho.mqtt.client as mqtt
 import yaml
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_manager')))
+from data_collector import DataCollector
+import time
+
 
 # Default Values
 CONF_FILE_PATH = "system_monitoring_conf.yaml"
@@ -54,13 +59,31 @@ def on_message(client, userdata, msg):
             device_telemetry_payload = {
                 "data_type": payload_dict["type"],
                 "value": payload_dict["value"],
-                "timestamp": payload_dict["timestamp"]
+                #"timestamp": payload_dict["timestamp"]
             }
 
-            client.publish(mqtt_publish, json.dumps(device_telemetry_payload))
+            data_collector.add_last_device_data(device_id, device_telemetry_payload)
+            print(len(data_collector.get_last_device_data()))
+
+            if len(data_collector.get_last_device_data()) == 2:
+                data = data_collector.get_last_device_data()
+                values = [float(d['value'].split()[0]) for d in data]
+                avg_value = sum(values) / len(values)
+                avg_telemetry_payload = {
+                    "data_type": data[0]['data_type'],
+                    "value": avg_value,
+                    "timestamp": time.time()
+                }
+                print(data)
+                print(avg_telemetry_payload)
+                client.publish(mqtt_publish, json.dumps(avg_telemetry_payload))
+                data_collector.delete_last_device_data()
 
         except Exception as e:
             print(f"Error processing MQTT message: {str(e)}")
+
+#Create Data collector
+data_collector = DataCollector()
 
 # Create MQTT client
 client = mqtt.Client()
