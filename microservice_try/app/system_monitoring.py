@@ -4,7 +4,7 @@ import paho.mqtt.client as mqtt
 import yaml
 
 # Default Values
-CONF_FILE_PATH = "fetcher_conf.yaml"
+CONF_FILE_PATH = "system_monitoring_conf.yaml"
 
 # Default Configuration Dictionary
 configuration_dict = {

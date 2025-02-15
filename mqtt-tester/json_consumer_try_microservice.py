@@ -13,11 +13,12 @@ def on_connect(client, userdata, flags, rc):
 # Define a callback method to receive asynchronous messages
 def on_message(client, userdata, message):
     message_payload = str(message.payload.decode("utf-8"))
-    message_descriptor = MessageDescriptor(**json.loads(message_payload))
+    #message_descriptor = MessageDescriptor(**json.loads(message_payload))
 
     if mqtt.topic_matches_sub(target_topic_environment_filter, message.topic):
         print("Message received for Environment Microservice:")
-        print(message_descriptor.to_json())
+        #print(message_descriptor.to_json())
+        print(message_payload)
     else:
         print("MEssage topic does not match the target filter")
 
