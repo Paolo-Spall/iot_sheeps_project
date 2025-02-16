@@ -15,8 +15,8 @@ def on_connect(client, userdata, flags, rc):
 
 
 # Configuration variables
-device_id = "d0002"
-client_id = "clientId0002-Producer"
+device_id = "d0009"
+client_id = "clientId0009-Producer"
 broker_ip = "127.0.0.1"
 broker_port = 1883
 default_topic_environment = f"drone/{device_id}/telemetry/env"# Nuovo topic per il sensore di elaborazione immagine

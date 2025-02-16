@@ -4,7 +4,7 @@
 from model.environmental_sensor import EnvironmentalSensor
 from model.gps_sensor import GPSSensor  # Aggiunto il sensore GPS
 from model.image_processing_system import ImageProcessingSensor  # Aggiunto il nuovo sensore
-from model.message_descriptor import MessageDescriptor
+from model.env_message_descriptor import MessageDescriptor
 import paho.mqtt.client as mqtt
 import time
 
@@ -42,7 +42,10 @@ for message_id in range(message_limit):
     payload_string_environment = MessageDescriptor(
         int(time.time()),
         "ENVIRONMENTAL_SENSOR",
-        sensor_data_environment["temperature"]
+        sensor_data_environment["temperature value"],
+        sensor_data_environment["temperature udm"],
+        sensor_data_environment["humidity"],
+        sensor_data_environment["rain probability"]
     ).to_json()
 
 

@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt
-from model.message_descriptor import MessageDescriptor
+from model.env_message_descriptor import MessageDescriptor
 import json
 
 # The callback for when the client receives a CONNACK response from the server.

@@ -4,7 +4,7 @@
 from model.environmental_sensor import EnvironmentalSensor
 from model.gps_sensor import GPSSensor  # Aggiunto il sensore GPS
 from model.image_processing_system import ImageProcessingSensor  # Aggiunto il sensore di elaborazione immagine
-from model.message_descriptor import MessageDescriptor
+from model.env_message_descriptor import MessageDescriptor
 import paho.mqtt.client as mqtt
 import time
 
