@@ -8,11 +8,9 @@ from model.message_descriptor import MessageDescriptor
 import paho.mqtt.client as mqtt
 import time
 
-
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
-
 
 # Configuration variables
 device_id = "d0003"
@@ -45,15 +43,15 @@ for message_id in range(message_limit):
     sensor_data_gps = {
         'x': gps_sensor.x_position,
         'y': gps_sensor.y_position,
-        'z': gps_sensor.z_position,
-        'timestamp': gps_sensor.timestamp
+        'z': gps_sensor.z_position
+        # Il campo "timestamp" è stato rimosso per evitare duplicazioni
     }
 
     image_processing_sensor.measure_distance()  # Acquisisce la distanza dal centro del gregge
     sensor_data_image_processing = {
         'distance': image_processing_sensor.distance_to_flock_center,
-        'unit': image_processing_sensor.unit_of_measurement,
-        'timestamp': image_processing_sensor.timestamp
+        'unit': image_processing_sensor.unit_of_measurement
+        # Il campo "timestamp" è stato rimosso per evitare duplicazioni
     }
 
     # Creazione del payload per i dati ambientali
