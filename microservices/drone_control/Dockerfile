@@ -1,7 +1,7 @@
 FROM python:3.9-slim-buster
 
 # Copy Application Files & Requirements to /app
-COPY ./app /app
+COPY app /app
 COPY requirements.txt /app/requirements.txt
 
 # Set the target container working directory to /app
@@ -15,4 +15,4 @@ ENV PYTHONPATH "/app/"
 ENV PYTHONUNBUFFERED 1
 
 # Run the target application
-CMD [ "python3", "system_monitoring.py" ]
+CMD [ "python3", "drone_control.py" ]

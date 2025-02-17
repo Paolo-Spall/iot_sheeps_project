@@ -1,5 +1,6 @@
 import random
 import time
+import json
 
 class ImageProcessingSensor:
 
@@ -12,3 +13,11 @@ class ImageProcessingSensor:
         self.distance_to_flock_center = random.uniform(10.0, 100.0)  # Distanza in metri
         self.unit_of_measurement = "meters"  # Unità di misura
         self.timestamp = int(time.time())  # Timestamp della misura
+
+    # Metodo per ottenere i dati in formato JSON
+    def get_json_data(self):
+        return json.dumps({
+            "distance": self.distance_to_flock_center,
+            "unit": self.unit_of_measurement,
+            "timestamp": self.timestamp
+        })

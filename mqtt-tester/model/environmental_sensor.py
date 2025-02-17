@@ -1,5 +1,6 @@
 import random
 import datetime
+import json
 
 
 class EnvironmentalSensor:
@@ -15,14 +16,15 @@ class EnvironmentalSensor:
         self.rain_probability = max(min(self.rain_probability + int(random.uniform(-1.3, 1.3)), 5), 0)
         self.timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # Data e ora
 
-    def get_data(self):
+    def get_json_data(self):
         """Restituisce i dati in un formato strutturato."""
-        return {
-            "temperature value": self.temperature_value,
-            "temperature udm": "°C",
+        return json.dumps({
+            "type": "ENVIRONMENTAL_SENSOR",
+            "temperature_value": self.temperature_value,
+            "temperature_udm": "°C",
             "humidity": self.humidity_value ,
-            "rain probability": self.rain_probability,
+            "rain_probability": self.rain_probability,
             "timestamp": self.timestamp
-        }
+        })
     
 

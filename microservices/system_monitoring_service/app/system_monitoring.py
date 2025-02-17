@@ -3,7 +3,7 @@ import paho.mqtt.client as mqtt
 import yaml
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data_manager')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'data_manager')))
 from data_collector import DataCollector
 import time
 
@@ -15,7 +15,7 @@ CONF_FILE_PATH = "system_monitoring_conf.yaml"
 configuration_dict = {
     "broker_ip": "127.0.0.1",
     "broker_port": 1883,
-    "target_telemetry_topic": "drone/+/telemetry/env",
+    "target_telemetry_topic": "drone/+/telemetry/environmental_data",
     "publish_telemetry_topic": "service/sys_monitoring/env",
     "publish_notification_topic": "notification",
     "device_api_url": "http://127.0.0.1:7070/api/v1/iot/inventory/location/l0001/device"
@@ -71,7 +71,7 @@ def on_message(client, userdata, msg):
                 "data_type": payload_dict["type"],
                 "temperature_value": payload_dict["temperature_value"],
                 "temperature_udm": payload_dict["temperature_udm"],
-                "humidity": payload_dict["humidity_value"],
+                "humidity": payload_dict["humidity"],
                 "rain_probability": payload_dict["rain_probability"],
             }
 
