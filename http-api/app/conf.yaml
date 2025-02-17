@@ -2,3 +2,8 @@ rest:
   api_prefix: "/api/v1/iot/inventory"
   host: "0.0.0.0"
   port: 7070
+gateway:
+  host: "127.0.0.1"
+  port: 7072
+  gateway_prefix : "/gateway"
+  control_endpoint : "/controls/mission-points"

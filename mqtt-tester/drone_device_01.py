@@ -8,11 +8,6 @@ import json
 
 
 
-# The callback for when the client receives a CONNACK response from the server.
-def on_connect(client, userdata, flags, rc):
-    print("Connected with result code " + str(rc))
-
-
 # Configuration variables
 drone_id = "d0001"
 client_id = "drone-d0001-Subscriber-Producer"
@@ -30,6 +25,7 @@ drone = Drone(drone_id)
 def on_connect(client, userdata, flags, rc):
     print("Connected to MQTT Broker with result code " + str(rc))
     client.subscribe(topic_control_input_subscribe)
+    client.publish(topic_gps_publish, drone.get_drone_position())
 
 def on_message(client, userdata, msg):
 

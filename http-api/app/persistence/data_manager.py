@@ -6,6 +6,7 @@ class DataManager:
     """
 
     # The data structure to store the telemetry data
+    data_manager_dict = {}
     device_timeseries_data = {}
 
     def add_device_telemetry_data(self, device_id, telemetry_data):
@@ -20,3 +21,16 @@ class DataManager:
             return self.device_timeseries_data[device_id]
         else:
             return None
+    
+    def init_mission(self):
+        self.data_manager_dict['mission'] = {}
+
+    def get_mission(self):
+        return self.data_manager_dict['mission']
+
+    def update_mission(self, mission_type, mission_points):
+        """Update the mission points for the drone"""
+        if "mission" not in self.data_manager_dict:
+            self.data_manager_dict["mission"] = {}
+        self.data_manager_dict["mission"]["mission_type"] = mission_type
+        self.data_manager_dict["mission"]["mission_points"] = mission_points

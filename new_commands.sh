@@ -11,3 +11,8 @@ sudo docker run --name=system_monitoring --network iot_network -v ${PWD}/target_
 sudo docker stop system_monitoring
 sudo docker rm system_monitoring
 cd ..
+
+sudo docker build -t gateway_http_mqtt_lab:0.1 .
+sudo docker run --name=gateway-http-mqtt --network iot_network -v ${PWD}/target_gateway_conf.yaml:/app/gateway_conf.yaml --restart always -d gateway_http_mqtt_lab:0.1
+sudo docker stop gateway-http-mqtt
+sudo docker rm gateway-http-mqtt

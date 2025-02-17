@@ -2,6 +2,7 @@ import requests
 from flask import Flask, request, render_template, jsonify
 import os
 import yaml
+import json
 import threading
 
 
@@ -47,19 +48,24 @@ class WebServer:
 
     def button_control_input(self):
         data = request.json  # Get JSON data from request
-        if data and "mission_points" in data and isinstance(data["mission_points"], list):
+        #data = json.loads(json_data)
+        if "mission_points" in data and isinstance(data["mission_points"], list):
+            
             points = data["mission_points"]
-            response_message = f"Received mission points: {points}\nMission type: {data['mission_type']}"
+            mission_type = data['mission_type']
+            response_message = f"Received mission points: {points}\nMission type: {mission_type}"
             # Get the base URL from the configuration
             base_http_url = self.configuration_dict['web']['api_base_url']
             target_url = f'{base_http_url}/controls/mission-points'
-
+            print(data)
             try:
                 # Send the PUT request
-                response_string = requests.put(target_url, json=data) # Send the PUT request
-            except Exception as e:
-                return jsonify({"Error in sending data to API server": str(e)}), 500
-            return jsonify({"message": response_message}), 200
+                response_string = requests.put(target_url, json=data, timeout=5) # Send the PUT request
+                print("response string:", response_string.content.decode())
+            except:
+                return jsonify({"Error": "in sending data to API server"}), 500
+            print("after except")
+            return jsonify({"response from api server": response_string.content.decode()}), response_string.status_code
         return jsonify({"error": "Invalid request"}), 400
 
     def read_configuration_file(self):

@@ -4,6 +4,6 @@ mqtt:
     broker_port: 1883
     topic: "service/control/track_points"
 http: 
-    host: "127.0.0.1"
+    host: "0.0.0.0"
     port: 7072
     rest_prefix: "/gateway/"

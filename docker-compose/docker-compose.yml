@@ -26,6 +26,7 @@ services:
     networks:
       - iot_network
 
+
   web-ui:
     container_name: web-ui-lab
     image: web-ui-lab:0.1
@@ -44,6 +45,20 @@ services:
     image: mqtt_data_fetcher_lab:0.1
     volumes:
       - ./target_fetcher_conf.yaml:/app/fetcher_conf.yaml
+    restart: always
+    depends_on:
+      - my-mosquitto-broker
+      - http-inventory-api
+    networks:
+      - iot_network
+
+  gateway-http-mqtt:
+    container_name: gateway-http-mqtt
+    image: gateway_http_mqtt_lab:0.1
+    ports:
+      - "7072:7072"
+    volumes:
+      - ./target_gateway_conf.yaml:/app/gateway_conf.yaml
     restart: always
     depends_on:
       - my-mosquitto-broker

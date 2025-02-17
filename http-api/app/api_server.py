@@ -15,6 +15,12 @@ configuration_dict = {
         "api_prefix": DEFAULT_ENDPOINT_PREFIX, 
         "host": "0.0.0.0",
         "port": 7070
+    },
+    "gateway":{
+        "host": "127.0.0.1",
+        "port": 7072,
+        "gateway_prefix" : "/gateway",
+        "control_endpoint" : "/controls/mission-points"
     }
 }
 
@@ -32,6 +38,15 @@ configuration_dict = read_configuration_file()
 
 print("Read Configuration from file ({}): {}".format(CONF_FILE_PATH, configuration_dict))
 
+gateway_host = configuration_dict['gateway']['host']
+gateway_prefix = configuration_dict['gateway']['gateway_prefix']
+gateway_port = configuration_dict['gateway']['port']
+gateway_endpoint = configuration_dict['gateway']['control_endpoint']
+
+#control_input_url = configuration_dict['gateway']['gateway_prefix']+configuration_dict['gateway']['control_endpoint']
+
+control_input_url = "http://"+gateway_host+":"+str(gateway_port)+gateway_prefix+gateway_endpoint
+
 app = Flask(__name__)
 api = Api(app)
 
@@ -45,10 +60,12 @@ api.add_resource(TelemetryDataResource, configuration_dict['rest']['api_prefix']
                       endpoint="device_telemetry_data",
                       methods=['GET', 'POST'])
 
+
 api.add_resource(MissionPoints, configuration_dict['rest']['api_prefix'] + '/controls/mission-points',
-                 resource_class_kwargs={'data_manager': data_manager},
+                 resource_class_kwargs={'data_manager': data_manager,
+                                        'control_input_url':control_input_url},
                  endpoint="mission-points",
-                 methods=['PUT'])
+                 methods=['PUT', 'GET'])
 
 if __name__ == '__main__':
 

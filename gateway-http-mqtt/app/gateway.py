@@ -20,7 +20,7 @@ configuration_dict = {
         "broker_port": 1883,
         "topic": "service/control/track_points"},
     "http": {
-        "host": "127.0.0.1",
+        "host": "0.0.0.0",
         "port": 7072,
         "rest_prefix": DEFAULT_REST_PREFIX}
 }
@@ -47,21 +47,32 @@ broker_ip = configuration_dict['mqtt']['broker_ip']
 broker_port = configuration_dict['mqtt']['broker_port']
 mqtt_topic = configuration_dict['mqtt']['topic']
 
+@app.route('/', methods=['GET'])
+def home():
+    return "Gateway Service"
+
+
+print("mission_points_endpoint", mission_points_endpoint)
+
 # rule to fetch mission points requests to mqtt
-@app.route(mission_points_endpoint, methods=['PUT'])
+@app.route('/gateway/controls/mission-points', methods=['PUT'])
 def fetch_mission_points():
 
     print("Received Mission Points Request")
     # Get the mission points from the request
     try:
-        data = request.json
-        type = data['mission_type']
-        points = data['mission_points']
+        jsondata = request.get_json(force=True)
+        data = json.loads(jsondata)
+        print(type(data))
+        print(data)
+        
+        mission_type = data['mission_type']
+        mission_points = data['mission_points']
     except Exception as e:
         print(e)
         return {"error": "Invalid request data"}, 400
     
-    payload = json.dumps({"mission_type": type, "mission_points": points})
+    payload = json.dumps({"mission_type": mission_type, "mission_points": mission_points})
     # Send the mission points to the MQTT Broker
 
     #try:
@@ -85,11 +96,11 @@ if __name__ == '__main__':
     mqtt_client.on_connect = on_connect
 
     print("Connecting to " + broker_ip + " port: " + str(broker_port))
+    
     mqtt_client.connect(broker_ip, broker_port)
 
     mqtt_client.loop_start()
 
-    time.sleep(5)
     # Run the Flask Application
     app.run(host=configuration_dict['http']['host'], 
             port=configuration_dict['http']['port'])  # run our Flask app
