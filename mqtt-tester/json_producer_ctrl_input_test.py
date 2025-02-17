@@ -16,11 +16,10 @@ def on_connect(client, userdata, flags, rc):
 
 
 # Configuration variables
-device_id = "d0001"
-client_id = "client-ctrl_input-Test-Producer"
+client_id = "test-client-001"
 broker_ip = "127.0.0.1"
 broker_port = 1883
-default_topic_control_input = f"drone/{device_id}/control_input"# Nuovo topic per il sensore di elaborazione immagine
+default_topic_control_input = "service/control/track_points"# Nuovo topic per il sensore di elaborazione immagine
 message_limit = 1000
 
 mqtt_client = mqtt.Client(client_id)
@@ -38,9 +37,8 @@ for message_id in range(message_limit):
     # Creazione del payload per i dati di controllo
 
     payload_string_environment = json.dumps({
-        "timestamp":int(time.time()),
-        "type":"CONTROL_INPUT_TEST",
-        "control_input": [0.118, 0.118, 0.0]
+        "field1": "value1",
+        "field2": "value2",
         }
     )
 

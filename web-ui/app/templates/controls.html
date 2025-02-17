@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Controls</title>
+    <script>
+        // Define the lists separately
+        const pointsSet1 = [[50, 0, 20],
+                            [100,  0,   20],
+                            [100, -50,  20],
+                            [100, -100, 20 ],
+                            [50,  -100, 20],
+                            [0,   -100, 20],
+                            [0,   -50,  20],
+                            [0,    0,   20]]
+        
+        const pointsHome = [[0, 0, 20]]
+
+        async function sendControlPutRequest(points, mission_type) {
+            const responseDiv = document.getElementById("response");
+
+            try {
+                const response = await fetch("/controls/button-input-points", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ mission_points: points , mission_type: mission_type})
+                });
+
+                const result = await response.json();
+                responseDiv.innerText = result.message || result.error;
+            } catch (error) {
+                responseDiv.innerText = "Error sending request.";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Chose the Control action:</h1>
+    
+    <label>Mission points:</label>
+    <table border="1">
+        <tr>
+            <th>point 1</th>
+            <th>point 2</th>
+            <th>point 3</th>
+            <th>point 4</th>
+            <th>point 5</th>
+            <th>point 6</th>
+            <th>point 7</th>
+            <th>point 8</th>
+        </tr>
+        <tr>
+            <td>50, 0, 20</td>
+            <td>100, 0, 20</td>
+            <td>100, -50, 20</td>
+            <td>100, -100, 20</td>
+            <td>50, -100, 20</td>
+            <td>0, -100, 20</td>
+            <td>0, -50, 20</td>
+            <td>0, 0, 20</td>
+        </tr>
+    </table>
+    <button onclick="sendControlPutRequest(pointsSet1, grazing)">Set Mission points</button>
+    <button onclick="sendControlPutRequest(pointsHome, return_home)">Return Home</button>
+
+    <p id="response"></p>
+</body>
+</html>

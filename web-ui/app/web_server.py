@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import os
 import yaml
 import threading
@@ -38,6 +38,29 @@ class WebServer:
 
         # Add URL rules to the Flask app mapping the URL to the function
         self.app.add_url_rule('/device/<string:device_id>/telemetry', 'telemetry', self.telemetry)
+        self.app.add_url_rule('/controls', 'controls', self.controls)
+        self.app.add_url_rule('/controls/button-input-points', 'button-input-points', self.button_control_input, methods=['PUT'])
+    
+    def controls(self):
+        return render_template('controls.html')
+    
+
+    def button_control_input(self):
+        data = request.json  # Get JSON data from request
+        if data and "mission_points" in data and isinstance(data["mission_points"], list):
+            points = data["mission_points"]
+            response_message = f"Received mission points: {points}\nMission type: {data['mission_type']}"
+            # Get the base URL from the configuration
+            base_http_url = self.configuration_dict['web']['api_base_url']
+            target_url = f'{base_http_url}/controls/mission-points'
+
+            try:
+                # Send the PUT request
+                response_string = requests.put(target_url, json=data) # Send the PUT request
+            except Exception as e:
+                return jsonify({"Error in sending data to API server": str(e)}), 500
+            return jsonify({"message": response_message}), 200
+        return jsonify({"error": "Invalid request"}), 400
 
     def read_configuration_file(self):
         """ Read Configuration File for the Web Server

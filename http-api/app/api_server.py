@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from persistence.data_manager import DataManager
 from resources.telemetry_data_resource import TelemetryDataResource
+from resources.mission_points_resource import MissionPoints
 import yaml
 
 # Default Values
@@ -43,6 +44,11 @@ api.add_resource(TelemetryDataResource, configuration_dict['rest']['api_prefix']
                       resource_class_kwargs={'data_manager': data_manager},
                       endpoint="device_telemetry_data",
                       methods=['GET', 'POST'])
+
+api.add_resource(MissionPoints, configuration_dict['rest']['api_prefix'] + '/controls/mission-points',
+                 resource_class_kwargs={'data_manager': data_manager},
+                 endpoint="mission-points",
+                 methods=['PUT'])
 
 if __name__ == '__main__':
 
