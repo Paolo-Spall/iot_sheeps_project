@@ -39,7 +39,40 @@ services:
       - http-inventory-api
     networks:
       - iot_network
-  
+
+  drone_control:
+    container_name: drone_control_cnt
+    image: drone_control_img:0.1
+    volumes:
+      - ./target_drone_control_conf.yaml:/app/drone_control_conf.yaml
+    restart: always
+    depends_on:
+      - my-mosquitto-broker
+    networks:
+      - iot_network
+
+  localization_service:
+    container_name: localization_service_cnt
+    image: localization_service_img:0.1
+    volumes:
+      - ./target_localization_conf.yaml:/app/localization_conf.yaml
+    restart: always
+    depends_on:
+      - my-mosquitto-broker
+    networks:
+      - iot_network
+
+  system_monitoring_service:
+    container_name: system_monitoring_service_cnt
+    image: system_monitoring_service_img:0.1
+    volumes:
+      - ./target_system_monitoring_conf.yaml:/app/system_monitoring_conf.yaml
+    restart: always
+    depends_on:
+      - my-mosquitto-broker
+    networks:
+      - iot_network
+
   mqtt_data_fetcher:
     container_name: mqtt_data_fetcher_lab
     image: mqtt_data_fetcher_lab:0.1

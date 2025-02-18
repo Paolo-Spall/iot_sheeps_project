@@ -1,6 +1,3 @@
-gnome-terminal -- bash -c "cd ./drone_control/app && python3 drone_control.py"
-gnome-terminal -- bash -c "cd ./system_monitoring_service/app && python3 system_monitoring.py"
-gnome-terminal -- bash -c "cd ./localization_service/app && python3 localization.py"
 gnome-terminal -- bash -c "cd ./mqtt-tester && python3 json_point_list.py"
 gnome-terminal -- bash -c "cd ./mqtt-tester && python3 drone_device_01.py"
 gnome-terminal -- bash -c "cd ./mqtt-tester && python3 drone_device_02.py"
