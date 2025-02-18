@@ -1,4 +1,6 @@
 broker_ip: "127.0.0.1"
 broker_port: 1883
-target_telemetry_topic: "device/+/temperature"
-device_api_url: "http://127.0.0.1:7070/api/v1/iot/inventory/device"
+target_telemetry_topic: "service/flock_localization/flock_center"
+target_telemetry_d_topic: "service/flock_localization/drones_center_gps"
+device_api_url: "http://127.0.0.1:7070/api/v1/iot/inventory/position/flock_center"
+drones_center_api_url: "http://127.0.0.1:7070/api/v1/iot/inventory/position/drones_center"

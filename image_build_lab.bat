@@ -1,5 +1,6 @@
 docker network create iot_network
 cd mqtt-broker
+docker run --name=my-mosquitto-broker --network iot_network -p 1883:1883 -v .\mosquitto.conf:\mosquitto\config\mosquitto.conf -v .\data:\mosquitto\data -v .\log:\mosquitto\log --restart always -d eclipse-mosquitto:2.0.12
 docker stop my-mosquitto-broker
 docker rm my-mosquitto-broker
 cd ..
@@ -17,8 +18,13 @@ docker rm mqtt_data_fetcher_lab
 cd ..
 cd web-ui
 docker build -t web-ui-lab:0.1 .
-docker run --name=web-ui -p 7071:7071 -v .\target_web_conf.yaml:\app\web_conf.yaml --restart always -d web-ui:0.1
 docker run --name=web-ui-lab -p 7071:7071 --network iot_network -v .\target_web_conf.yaml:\app\web_conf.yaml --restart always -d web-ui-lab:0.1
 docker stop web-ui-lab
 docker rm web-ui-lab
+cd ..
+cd gateway-http-mqtt
+docker build -t gateway_http_mqtt_lab:0.1 .
+docker run --name=gateway-http-mqtt --network iot_network -p 7072:7072 -v .\target_gateway_conf.yaml:\app\gateway_conf.yaml --restart always -d gateway_http_mqtt_lab:0.1
+docker stop gateway-http-mqtt
+docker rm gateway-http-mqtt
 cd ..

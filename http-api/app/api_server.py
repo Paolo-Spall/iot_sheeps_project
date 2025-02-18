@@ -3,6 +3,8 @@ from flask_restful import Api
 from persistence.data_manager import DataManager
 from resources.telemetry_data_resource import TelemetryDataResource
 from resources.mission_points_resource import MissionPoints
+from resources.flock_center_resource import FlockCenterResource
+from resources.drones_center_resource import DronesCenterResource
 import yaml
 
 # Default Values
@@ -66,6 +68,16 @@ api.add_resource(MissionPoints, configuration_dict['rest']['api_prefix'] + '/con
                                         'control_input_url':control_input_url},
                  endpoint="mission-points",
                  methods=['PUT', 'GET'])
+
+api.add_resource(FlockCenterResource, configuration_dict['rest']['api_prefix'] + '/position/flock_center',
+                      resource_class_kwargs={'data_manager': data_manager},
+                      endpoint="flock_center_telemetry_data",
+                      methods=['GET', 'POST'])
+
+api.add_resource(DronesCenterResource, configuration_dict['rest']['api_prefix'] + '/position/drones_center',
+                      resource_class_kwargs={'data_manager': data_manager},
+                      endpoint="drones_center_telemetry_data",
+                      methods=['GET', 'POST'])
 
 if __name__ == '__main__':
 

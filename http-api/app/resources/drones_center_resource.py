@@ -2,17 +2,17 @@ from json import JSONDecodeError
 from flask import request, Response
 from flask_restful import Resource
 
-class TelemetryDataResource(Resource):
+class DronesCenterResource(Resource):
     """Resource to handle the Telemetry Data of a specific Device"""
 
     def __init__(self, **kwargs):
         # Inject the DataManager instance
         self.data_manager = kwargs['data_manager']
 
-    def get(self, device_id):
+    def get(self):
         """GET Request to retrieve the Telemetry Data of a target device"""
 
-        device_telemetry_data = self.data_manager.get_telemetry_data_by_device_id(device_id)
+        device_telemetry_data = self.data_manager.get_drones_data()
 
         if device_telemetry_data is not None:
             result_location_list = []
@@ -27,7 +27,7 @@ class TelemetryDataResource(Resource):
         else:
             return {'error': "Device Not Found !"}, 404
 
-    def post(self, device_id):
+    def post(self):
         try:
 
             # The boolean flag force the parsing of POST data as JSON irrespective of the mimetype
@@ -37,7 +37,7 @@ class TelemetryDataResource(Resource):
             #telemetry_message = TelemetryMessage(**telemetry_json_data)
 
             # Add the telemetry data to the data manager
-            self.data_manager.add_device_telemetry_data_by_device_id(device_id, telemetry_data_dict)
+            self.data_manager.add_drones_telemetry_data(telemetry_data_dict)
 
             return Response(status=201)  # return 201 Created
 

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drones Center Cartesian Position</title>
+</head>
+<body>
+    <h1>Drones Center Cartesian Position</h1>
+    {% if telemetry_data %}
+    <table border="1">
+        <tr>
+            <th>Timestamp</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Altitude</th>
+
+        </tr>
+        {% for telemetry in telemetry_data %}
+        <tr>
+            <td>{{ telemetry.timestamp }}</td>
+            <td>{{ telemetry.lat }}</td>
+            <td>{{ telemetry.lng }}</td>
+            <td>{{ telemetry.alt }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No telemetry data available for flock_center.</p>
+    {% endif %}
+</body>
+</html>

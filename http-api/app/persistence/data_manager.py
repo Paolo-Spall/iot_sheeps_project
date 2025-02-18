@@ -6,10 +6,11 @@ class DataManager:
     """
 
     # The data structure to store the telemetry data
-    data_manager_dict = {}
-    device_timeseries_data = {}
+    data_manager_dict = {}   #Lista di punti di missione
+    flock_timeseries_data = []   #Telemetry aggiornata istante per istante
+    drones_timeseries_data = []   #Telemetry aggiornata istante per istante
 
-    def add_device_telemetry_data(self, device_id, telemetry_data):
+    def add_device_telemetry_data_by_device_id(self, device_id, telemetry_data):
         """Add a new telemetry data for a given device"""
         if device_id not in self.device_timeseries_data:
             self.device_timeseries_data[device_id] = []
@@ -21,6 +22,20 @@ class DataManager:
             return self.device_timeseries_data[device_id]
         else:
             return None
+
+    def add_flock_telemetry_data(self, telemetry_data):
+        """Add a new telemetry data for a given device"""
+        self.flock_timeseries_data.append(telemetry_data)
+
+    def get_flock_data(self):
+        return self.flock_timeseries_data
+
+    def add_drones_telemetry_data(self, telemetry_data):
+        """Add a new telemetry data for a given device"""
+        self.drones_timeseries_data.append(telemetry_data)
+
+    def get_drones_data(self):
+        return self.drones_timeseries_data
     
     def init_mission(self):
         self.data_manager_dict['mission'] = {}

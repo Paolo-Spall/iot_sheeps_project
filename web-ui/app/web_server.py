@@ -38,7 +38,8 @@ class WebServer:
         self.app = Flask(__name__, template_folder=template_dir)
 
         # Add URL rules to the Flask app mapping the URL to the function
-        self.app.add_url_rule('/device/<string:device_id>/telemetry', 'telemetry', self.telemetry)
+        self.app.add_url_rule('/position/flock_center', 'telemetry', self.telemetry)
+        self.app.add_url_rule('/position/drones_center', 'telemetry_d', self.telemetry_d)
         self.app.add_url_rule('/controls', 'controls', self.controls)
         self.app.add_url_rule('/controls/button-input-points', 'button-input-points', self.button_control_input, methods=['PUT'])
     
@@ -84,24 +85,45 @@ class WebServer:
 
         print("Read Configuration from file ({}): {}".format(self.config_file, self.configuration_dict))
 
-    def telemetry(self, device_id):
-        """ Get telemetry data for a specific device and render the telemetry.html template"""
-        telemetry_data = self.http_get_device_telemetry(device_id)
+    def telemetry(self):
+        """ Get telemetry data and render the telemetry.html template"""
+        telemetry_data = self.http_get_device_telemetry()
         print(telemetry_data)
-        return render_template('telemetry.html', telemetry_data=telemetry_data, device_id=device_id)
+        return render_template('flock_center_telemetry.html', telemetry_data=telemetry_data)
 
-    def http_get_device_telemetry(self, device_id):
+    def http_get_device_telemetry(self):
         """ Get all locations from the remote server over HTTP"""
 
         # Get the base URL from the configuration
         base_http_url = self.configuration_dict['web']['api_base_url']
-        target_url = f'{base_http_url}/device/{device_id}/telemetry'
+        target_url = f'{base_http_url}/position/flock_center'
 
         # Send the GET request
         response_string = requests.get(target_url)
 
         # Return the JSON response
         return response_string.json()
+
+
+    def telemetry_d(self):
+        """ Get telemetry data and render the telemetry.html template"""
+        telemetry_data = self.http_get_device_telemetry_d()
+        print(telemetry_data)
+        return render_template('drone_center_telemetry.html', telemetry_data=telemetry_data)
+
+    def http_get_device_telemetry_d(self):
+        """ Get all locations from the remote server over HTTP"""
+
+        # Get the base URL from the configuration
+        base_http_url = self.configuration_dict['web']['api_base_url']
+        target_url = f'{base_http_url}/position/drones_center'
+
+        # Send the GET request
+        response_string = requests.get(target_url)
+
+        # Return the JSON response
+        return response_string.json()
+
 
     def devices(self, location_id):
         """ Get all devices for a specific location and render the devices.html template"""
