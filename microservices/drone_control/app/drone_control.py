@@ -5,6 +5,7 @@ import os
 import sys
 import numpy as np
 import time
+import math
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'data_manager')))
 from data_collector import DataCollector
@@ -88,60 +89,72 @@ def process_control(client):
         print("Nessun punto di missione disponibile.")
         return
 
+    # Il punto di missione rappresenta il centro desiderato della formazione.
+    mission_point = np.array(points_list[0])
+    print(f"Punto di missione: {mission_point}")
+
+    # Recupero il centro attuale della formazione dai dati DRONES_CENTER_CARTESIAN
     center_position = next(
         ([d["x"], d["y"], d["z"]] for d in data if d["data_type"] == "DRONES_CENTER_CARTESIAN"),
         [0, 0, 0]
     )
+    center_position = np.array(center_position)
     print(f"Centro attuale: {center_position}")
-    print(f"Punto di missione: {points_list[0]}")
 
-    np_points_list = np.array(points_list)
-    np_center_position = np.array(center_position)
-
-    if np.linalg.norm(np_points_list[0] - np_center_position) < 2:
+    # Se il centro attuale è sufficientemente vicino al punto di missione, rimuovo il punto
+    if np.linalg.norm(mission_point - center_position) < 2:
+        print("Il centro è vicino al punto di missione, rimuovo il punto dalla lista.")
         data_collector.remove_point()
         if not data_collector.get_points_list()["mission_points"]:
             print("Missione completata")
             client.disconnect()
             return
 
-    try:
-        k = 0.4
-        u_c = np.array([k * (np_points_list[0][i] - center_position[i]) for i in range(3)])
-        print(f"Controllo di tracking: {u_c}")
+    # Calcolo del controllo di tracking del centro (u_center)
+    k_center = 0.4
+    u_center = k_center * (mission_point - center_position)
+    print(f"Controllo tracking centro (u_center): {u_center}")
 
-        desired_distance = 1
-        formation_k = 0.2
-        drone_positions = {d["device_id"]: [d["x"], d["y"], d["z"]] for d in data if d['data_type'] == 'DRONE_POSITION'}
-        u_f = {drone_id: np.zeros(3) for drone_id in drone_positions.keys()}
-        drone_ids = list(drone_positions.keys())
+    # Preleviamo le posizioni correnti dei droni (data_type == DRONE_POSITION)
+    drone_positions = {
+        d["device_id"]: np.array([d["x"], d["y"], d["z"]])
+        for d in data if d["data_type"] == "DRONE_POSITION"
+    }
+    drone_ids = sorted(drone_positions.keys())
+    if len(drone_ids) != 3:
+        print("Numero di droni diverso da 3, impossibile formare un triangolo equilatero.")
+        return
 
-        for i in range(len(drone_ids)):
-            for j in range(i + 1, len(drone_ids)):
-                id_i, id_j = drone_ids[i], drone_ids[j]
-                pos_i, pos_j = np.array(drone_positions[id_i]), np.array(drone_positions[id_j])
-                distance = np.linalg.norm(pos_j - pos_i)
-                error = distance - desired_distance
-                if distance > 1e-6:
-                    direction = (pos_j - pos_i) / distance
-                    correction = formation_k * error * direction
-                    u_f[id_i] += correction
-                    u_f[id_j] -= correction
+    # Calcolo degli offset per un triangolo equilatero di lato 5 (nel piano x-z, y = 0)
+    s = 5.0
+    R = s / math.sqrt(3)  # Raggio circoscritto ~2.88675
+    # Assegno gli offset in base all'ordine (per esempio: drone1 in alto, drone2 a sinistra, drone3 a destra)
+    desired_offsets = {
+        drone_ids[0]: np.array([0.0, 0.0, R]),
+        drone_ids[1]: np.array([-s / 2, 0.0, -R / 2]),
+        drone_ids[2]: np.array([s / 2, 0.0, -R / 2])
+    }
 
-        for drone_id, position in drone_positions.items():
-            u_c_drone = np.array([k * (np_points_list[0][i] - position[i]) for i in range(3)])
-            u_total = u_c_drone + u_f[drone_id]
-            print(f"Control input per {drone_id}: {u_total}")
-            control_message = {
-                "data_type": "CONTROL_INPUT",
-                "u_x": float(u_total[0]),
-                "u_y": float(u_total[1]),
-                "u_z": float(u_total[2])
-            }
-            topic = mqtt_topic_control_input.format(drone_id)
-            client.publish(topic, json.dumps(control_message))
-    except Exception as e:
-        print(f"Errore nel calcolo del controllo: {str(e)}")
+    # Guadagno per il controllo posizione individuale
+    k_pos = 0.4
+    for drone_id, current_pos in drone_positions.items():
+        # Calcolo della posizione desiderata per la formazione (solo con l'offset, senza il tracking)
+        desired_pos_formation = center_position + desired_offsets[drone_id]
+        # Calcolo del controllo di formazione (u_formation) basato sull'errore tra posizione desiderata (formation) e posizione attuale
+        u_formation = k_pos * (desired_pos_formation - current_pos)
+        # Il controllo totale è la somma di u_center (che sposta il centro) e u_formation (che regola la formazione)
+        u_total = u_center + u_formation
+
+        print(f"Control input per {drone_id}: {u_total}, u_center: {u_center}, u_formation: {u_formation}")
+
+        control_message = {
+            "data_type": "CONTROL_INPUT",
+            "u_x": float(u_total[0]),
+            "u_y": float(u_total[1]),
+            "u_z": float(u_total[2])
+        }
+        topic = mqtt_topic_control_input.format(drone_id)
+        client.publish(topic, json.dumps(control_message))
 
 
 client = mqtt.Client()

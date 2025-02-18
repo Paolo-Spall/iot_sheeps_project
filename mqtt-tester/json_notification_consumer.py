@@ -1,5 +1,4 @@
 import paho.mqtt.client as mqtt
-from model.notification_message_descriptor import NotificationMessageDescriptor
 import json
 
 

@@ -1,6 +1,4 @@
 #!/usr/bin/bash
-
-from .gps_sensor import GPSSensor
 from .image_processing_system import ImageProcessingSensor
 from .environmental_sensor import EnvironmentalSensor
 import numpy as np
@@ -18,7 +16,6 @@ class Drone:
     def __init__(self, id):
         self.id = id
         self.device_type = "drone"
-        self.gps_sensor = GPSSensor()
         self.image_processing_sensor = ImageProcessingSensor()
         self.environmental_sensor = EnvironmentalSensor()
 
@@ -45,15 +42,11 @@ class Drone:
         })
 
     def read_sensors(self):
-        #self.gps_sensor.measure_position()
         self.image_processing_sensor.measure_distance()
         self.environmental_sensor.measure_environment()
 
     def get_environmental_data(self):
         return self.environmental_sensor.get_json_data()
-
-    '''def get_raw_gps_data(self):
-        return self.gps_sensor.get_json_data()'''
 
     def get_image_processing_data(self):
         return self.image_processing_sensor.get_json_data()

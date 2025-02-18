@@ -39,7 +39,7 @@ def read_configuration_file():
         configuration_dict = yaml.safe_load(file)
     return configuration_dict
 
-def cartesian_to_gps(self, lat_ref, lng_ref, x, y, z):
+def cartesian_to_gps(lat_ref, lng_ref, x, y, z):
         """ Converte x, y in latitudine e longitudine, mantenendo z come altitudine """
         R = 6378137
 
@@ -82,17 +82,18 @@ def calculate_flock_position(timestamp):
         print("⚠️ Non ho abbastanza dati per calcolare la posizione del gregge")
         return
 
-    # Estraggo le distanze dal centro del gregge dai dati di image processing
-    distances = np.array([
-        image_processing_data[key]["distance"]
-        for key in sorted(image_processing_data.keys())
-    ])
+    # Converte i dati dei droni in un array numpy
+    points = np.array([[data["x"], data["y"], data["z"]] for data in cartesian_drones_data.values()])
 
-    # Trilaterazione (media pesata)
+    # Ordina le distanze dai dati di image_processing (assumendo che le chiavi corrispondano)
+    sorted_keys = sorted(image_processing_data.keys())
+    distances = np.array([image_processing_data[key]["distance"] for key in sorted_keys])
+
+    # Calcola i pesi e la posizione media pesata
     weights = 1 / distances
-    flock_x = np.sum(cartesian_drones_data[:, 0] * weights) / np.sum(weights)
-    flock_y = np.sum(cartesian_drones_data[:, 1] * weights) / np.sum(weights)
-    flock_z = np.sum(cartesian_drones_data[:, 2] * weights) / np.sum(weights)
+    flock_x = np.sum(points[:, 0] * weights) / np.sum(weights)
+    flock_y = np.sum(points[:, 1] * weights) / np.sum(weights)
+    flock_z = np.sum(points[:, 2] * weights) / np.sum(weights)
 
     flock_position = {"x": float(flock_x), "y": float(flock_y), "z": float(flock_z)}
     print(f"📌 Calculated flock position: {flock_position}")
@@ -112,6 +113,7 @@ def calculate_flock_position(timestamp):
     # Svuoto i dati per il prossimo ciclo
     cartesian_drones_data.clear()
     image_processing_data.clear()
+
 
 # Callback per la connessione al broker MQTT
 def on_connect(client, userdata, flags, rc):
