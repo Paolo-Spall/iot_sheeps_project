@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import messagebox
 import threading
 import json
-from notification.app.service_message import ServiceMessage
+from service_message import ServiceMessage
 
 HOST = '127.0.0.1'  # Server IP address (localhost)
 PORT = 65432        # Port for server 

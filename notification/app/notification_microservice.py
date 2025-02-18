@@ -1,7 +1,7 @@
 import socket
 import json
 import paho.mqtt.client as mqtt
-from notification.app.service_message import ServiceMessage
+from service_message import ServiceMessage
 from json import JSONDecodeError
 import threading
 

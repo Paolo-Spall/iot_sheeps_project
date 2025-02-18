@@ -6,6 +6,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'data_manager')))
 from data_manager.data_collector import DataCollector
 import time
+import random
 
 
 # Default Values
@@ -76,7 +77,6 @@ def on_message(client, userdata, msg):
             }
 
             data_collector.add_last_device_data(device_id, device_telemetry_payload)
-            print(len(data_collector.get_last_device_data()))
 
             if len(data_collector.get_last_device_data()) == 3:
                 avg_value = []
@@ -93,8 +93,7 @@ def on_message(client, userdata, msg):
                     "timestamp": int(time.time())
                 }
 
-                print(data)
-                print(avg_telemetry_payload)
+                print("Telemetry Published. Temperature=",avg_telemetry_payload["temperature_value"])
                 client.publish(mqtt_publish, json.dumps(avg_telemetry_payload))
                 data_collector.delete_last_device_data()
                 notification_service(client,avg_value,data)
@@ -129,8 +128,10 @@ def notification_service(client,avg_value,data):
     }
     #avg_telemetry_payload.update(payload)
     if alerts:
-        print(avg_telemetry_payload)
-        client.publish(mqtt_notification, json.dumps(avg_telemetry_payload))
+        #if 1 == random.randint(0,10):
+            print("Publishing Notification")
+            client.publish(mqtt_notification, json.dumps(avg_telemetry_payload))
+            print("Notification Published")
 
 
 #Create Data collector

@@ -2,9 +2,7 @@
 # You can install it through the following command: pip install paho-mqtt
 
 from model.environmental_sensor import EnvironmentalSensor
-from model.gps_sensor import GPSSensor  # Aggiunto il sensore GPS
 from model.image_processing_system import ImageProcessingSensor  # Aggiunto il nuovo sensore
-from model.message_descriptor import MessageDescriptor
 import paho.mqtt.client as mqtt
 import time
 import json
@@ -19,7 +17,7 @@ def on_connect(client, userdata, flags, rc):
 client_id = "test-client-001"
 broker_ip = "127.0.0.1"
 broker_port = 1883
-default_topic_control_input = "service/control/track_points"# Nuovo topic per il sensore di elaborazione immagine
+default_topic_control_input = "notification"# Nuovo topic per il sensore di elaborazione immagine
 message_limit = 1000
 
 mqtt_client = mqtt.Client(client_id)
@@ -37,8 +35,9 @@ for message_id in range(message_limit):
     # Creazione del payload per i dati di controllo
 
     payload_string_environment = json.dumps({
-        "field1": "value1",
-        "field2": "value2",
+        "data_type": "environment alert",
+        "timestamp": 1234567890,
+        "alerts": "High rain probability",
         }
     )
 
