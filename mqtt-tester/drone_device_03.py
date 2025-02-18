@@ -7,8 +7,8 @@ import time
 import json
 
 # Configuration variables
-drone_id = "d0001"
-client_id = "drone-d0001-Subscriber-Producer"
+drone_id = "d0003"
+client_id = "drone-d0003-Subscriber-Producer"
 broker_ip = "127.0.0.1"
 broker_port = 1883
 default_topic_publish = f"drone/{drone_id}/"
@@ -27,9 +27,10 @@ drone = Drone(drone_id)
 def on_connect(client, userdata, flags, rc):
     print("Connected to MQTT Broker with result code " + str(rc))
     client.subscribe(topic_control_input_subscribe)
-    client.publish(topic_cartesian_publish, drone.get_drone_position())
-    client.publish(topic_gps_publish, drone.get_gps_data())
+    client.publish(topic_cartesian_publish, drone.get_drone_position()) # Cartesian coordinate
+    client.publish(topic_gps_publish, drone.get_gps_data()) # Latitude, longitude and altitude
     client.publish(topic_image_processing_publish, drone.get_image_processing_data())
+
 
 
 mqtt_client = mqtt.Client(client_id)

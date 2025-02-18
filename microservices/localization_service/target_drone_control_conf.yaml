@@ -1,0 +1,10 @@
+broker_ip: "my-mosquitto-broker"
+broker_port: 1883
+cartesian_topic: "drone/+/telemetry/cartesian"
+image_processing_topic: "drone/+/telemetry/image_processing"
+publish_flock_center_topic: "service/flock_localization/flock_center"
+publish_drones_center_gps_topic: "service/flock_localization/drones_center_gps"
+publish_drones_center_cartesian_topic: "service/flock_localization/drones_center_cartesian"
+#target_telemetry_topic: "drone/+/telemetry/env"
+#publish_telemetry_topic: "service/sys_monitoring/env"
+device_api_url: "http://127.0.0.1:7070/api/v1/iot/inventory/device"

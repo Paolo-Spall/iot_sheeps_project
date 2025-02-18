@@ -1,0 +1,7 @@
+broker_ip: "my-mosquitto-broker"
+broker_port: 1883
+target_cartesian_topic: "drone/+/telemetry/cartesian"
+target_drone_center_cartesian_topic: "service/flock_localization/drones_center_cartesian"
+target_points_list: "service/control/track_points"
+device_api_url: "http://127.0.0.1:7070/api/v1/iot/inventory/device"
+control_input_topic: "drone/{}/control_input"

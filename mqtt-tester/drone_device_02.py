@@ -7,8 +7,8 @@ import time
 import json
 
 # Configuration variables
-drone_id = "d0001"
-client_id = "drone-d0001-Subscriber-Producer"
+drone_id = "d0002"
+client_id = "drone-d0002-Subscriber-Producer"
 broker_ip = "127.0.0.1"
 broker_port = 1883
 default_topic_publish = f"drone/{drone_id}/"

@@ -1,0 +1,8 @@
+gnome-terminal -- bash -c "cd ./microservices/drone_control/app && python3 drone_control.py"
+gnome-terminal -- bash -c "cd ./microservices/system_monitoring_service/app && python3 system_monitoring.py"
+gnome-terminal -- bash -c "cd ./microservices/localization_service/app && python3 localization.py"
+gnome-terminal -- bash -c "cd ./mqtt-tester && python3 json_point_list.py"
+gnome-terminal -- bash -c "cd ./mqtt-tester && python3 drone_device_01.py"
+gnome-terminal -- bash -c "cd ./mqtt-tester && python3 drone_device_02.py"
+gnome-terminal -- bash -c "cd ./mqtt-tester && python3 drone_device_03.py"
+gnome-terminal -- bash -c "cd ./mqtt-tester && python3 json_notification_consumer.py"
