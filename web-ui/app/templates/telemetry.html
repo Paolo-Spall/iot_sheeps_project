@@ -2,27 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Telemetry Data for Device {{ device_id }}</title>
+    <title>Flock Center Cartesian Position</title>
 </head>
 <body>
-    <h1>Telemetry Data for Device {{ device_id }}</h1>
+    <h1>Flock Center Cartesian Position</h1>
     {% if telemetry_data %}
     <table border="1">
         <tr>
             <th>Timestamp</th>
-            <th>Data Type</th>
-            <th>Value</th>
+            <th>X</th>
+            <th>Y</th>
         </tr>
         {% for telemetry in telemetry_data %}
         <tr>
             <td>{{ telemetry.timestamp }}</td>
-            <td>{{ telemetry.data_type }}</td>
-            <td>{{ telemetry.value }}</td>
+            <td>{{ telemetry.x }}</td>
+            <td>{{ telemetry.y }}</td>
         </tr>
         {% endfor %}
     </table>
     {% else %}
-    <p>No telemetry data available for this device.</p>
+    <p>No telemetry data available for flock_center.</p>
     {% endif %}
 </body>
 </html>
