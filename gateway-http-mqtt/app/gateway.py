@@ -77,8 +77,7 @@ def fetch_mission_points():
 
     #try:
     mqtt_client.publish(mqtt_topic, payload)
-    infot_environment = mqtt_client.publish(mqtt_topic, payload)
-    infot_environment.wait_for_publish()
+    
     print(f"Message Sent - Topic: {mqtt_topic} Payload: {payload}")
 
     # except Exception as e:
