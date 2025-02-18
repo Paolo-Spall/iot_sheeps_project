@@ -6,6 +6,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'data_manager')))
 from data_collector import DataCollector
 import time
+import random
 
 
 # Default Values
@@ -129,8 +130,9 @@ def notification_service(client,avg_value,data):
     }
     #avg_telemetry_payload.update(payload)
     if alerts:
-        print(avg_telemetry_payload)
-        client.publish(mqtt_notification, json.dumps(avg_telemetry_payload))
+        if 1 == random.randint(0,10):
+            print(avg_telemetry_payload)
+            client.publish(mqtt_notification, json.dumps(avg_telemetry_payload))
 
 
 #Create Data collector

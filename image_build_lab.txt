@@ -1,5 +1,6 @@
 docker network create iot_network
 cd mqtt-broker
+docker run --name=my-mosquitto-broker --network iot_network -p 1883:1883 -v .\mosquitto.conf:\mosquitto\config\mosquitto.conf -v .\data:\mosquitto\data -v .\log:\mosquitto\log --restart always -d eclipse-mosquitto:2.0.12
 docker stop my-mosquitto-broker
 docker rm my-mosquitto-broker
 cd ..
