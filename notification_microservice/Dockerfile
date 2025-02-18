@@ -14,9 +14,5 @@ RUN pip3 install -r requirements.txt
 ENV PYTHONPATH "/app/"
 ENV PYTHONUNBUFFERED 1
 
-# Copia ed esegui uno script per avviare entrambi i file Python
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh
-
-# Avvia lo script di startup
-CMD ["./start.sh"]
+# Run the target application
+CMD [ "python3", "notification_microservice.py" ]
