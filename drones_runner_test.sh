@@ -1,4 +1,4 @@
-gnome-terminal -- bash -c "cd ./mqtt-tester && python3 json_point_list.py"
+#gnome-terminal -- bash -c "cd ./mqtt-tester && python3 json_point_list.py"
 gnome-terminal -- bash -c "cd ./mqtt-tester && python3 drone_device_01.py"
 gnome-terminal -- bash -c "cd ./mqtt-tester && python3 drone_device_02.py"
 gnome-terminal -- bash -c "cd ./mqtt-tester && python3 drone_device_03.py"
