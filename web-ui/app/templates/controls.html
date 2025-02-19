@@ -16,6 +16,8 @@
         
         const pointsHome = [[0, 0, 20]]
 
+        const pointsAbort = []
+
         async function sendControlPutRequest(points, mission_type) {
             const responseDiv = document.getElementById("response");
 
@@ -64,6 +66,7 @@
     </table>
     <button onclick="sendControlPutRequest(pointsSet1, 'grazing')">Set Mission points</button>
     <button onclick="sendControlPutRequest(pointsHome, 'return_home')">Return Home</button>
+    <button onclick="sendControlPutRequest(pointsAbort, 'no_mission')">Abort Mission</button>
 
     <p id="response"></p>
 </body>

@@ -19,4 +19,6 @@ cd ..
 cd system_monitoring_service
 sudo docker build -t system_monitoring_service_img:0.1 .
 cd ..
-
+cd notification_microservice
+sudo docker build -t notification_microservice_img:0.1 .
+cd ..
