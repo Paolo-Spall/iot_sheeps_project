@@ -73,6 +73,19 @@ services:
     networks:
       - iot_network
 
+  notification_microservice:
+    container_name: notification_microservice
+    image: notification_microservice_img:0.1
+    ports:
+      - "65432:65432"
+    volumes:
+      - ./target_notification_microservice_conf.yaml:/app/notification_microservice_conf.yaml
+    restart: always
+    depends_on:
+      - my-mosquitto-broker
+    networks:
+      - iot_network
+
   mqtt_data_fetcher:
     container_name: mqtt_data_fetcher_lab
     image: mqtt_data_fetcher_lab:0.1
