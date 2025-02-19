@@ -1,6 +1,6 @@
 cd notification_microservice
 sudo docker build -t notification_microservice_img:0.1 .
-sudo docker run --name=notification_microservice --network iot_network -v ${PWD}/target_notification_microservice_conf.yaml:/app/notification_microservice_conf.yaml --restart always -d notification_microservice_img:0.1
+sudo docker run --name=notification_microservice --network docker-compose_iot_network -p 65432.65432 -v ${PWD}/target_notification_microservice_conf.yaml:/app/notification_microservice_conf.yaml --restart always -d notification_microservice_img:0.1
 sudo docker stop notification_microservice
 sudo docker rm notification_microservice
 cd ..

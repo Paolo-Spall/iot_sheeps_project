@@ -34,6 +34,7 @@ def show_popup(formatted_message):
     
     # Mostra il messaggio 
     messagebox.showinfo("New Notification", formatted_message)
+    root.destroy()
     root.mainloop()
 
 def receive_notifications():
@@ -45,7 +46,6 @@ def receive_notifications():
         print("Client listening for notifications...")
         while True:
             data = s.recv(1024)  # Riceve il messaggio dal server
-            
             
             if data:
                 message = data.decode('utf-8')
@@ -70,5 +70,5 @@ notification_thread.start()
 
 # Initialize the Tkinter graphical interface
 root = tk.Tk()
-root.withdraw()  # Hide the main Tkinter window
+# #root.withdraw()  # Hide the main Tkinter window
 root.mainloop()
