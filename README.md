@@ -130,14 +130,7 @@ iot_sheeps_project/
 - **Python 3.x** is required for running the notification client and the drone simulation scripts.
 - **Bash shell** (for Linux/Mac users) to execute the `drones_runner_test.sh` script.
 
-## Contributing
-
-Contributions, bug fixes, and enhancements are welcome! Please open an issue or submit a pull request if you have suggestions.
-
-## License
-
-*Include license information here if applicable.*
 
 ## Contact
 
-For questions or support, please contact [your_email@example.com](mailto:your_email@example.com).
+For questions or support, please contact [autonomous_shepherding_service@hotmail.com].
