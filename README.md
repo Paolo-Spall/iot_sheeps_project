@@ -1,136 +1,74 @@
 # IoT Sheeps Project
 
-This repository contains a demo version of an IoT software system designed for managing a fleet of drones used for sheep grazing monitoring. It was developed as the project for the **Distributed and Internet of Things Software Architectures** course.
+This repository contains a demo version of an IoT software for the management of a fleet of drones used for sheep grazing monitoring. It is a project for the "Distributed and Internet of Things Software Architectures" course.
 
 ## Overview
 
-**Platform Support:**  
-- Multiplatform: Linux, iOS, Windows  
-
-**Architecture:**  
-- Based on a microservice architecture  
-- Containerized using Docker  
-- Services are deployed on a Docker network and orchestrated with Docker Compose
+- Multiplatform (Linux, iOS, Windows).
+- Based on a microservice architecture.
+- Bely on Docker for containerization.
 
 ## Microservices
 
-The system is composed of the following containerized microservices, each with its own `Dockerfile`, `requirements.txt`, and configuration file:
+The project is composed of the following microservices:
 
-- **data-fetcher**
-- **drone_control**
-- **gateway-http-mqtt**
-- **http-api**
-- **localization_service**
-- **mqtt-broker**
-- **notification_microservice**
-- **system_monitoring_service**
+- data-fetcher
+- drone_control
+- gateway-http-mqtt
+- http-api
+- localization_service
+- mqtt-broker
+- notification_microservice
+- system_monitoring_service
 
-## Non-containerized Components
+Each microservice is containerized using Docker, and each has its own `Dockerfile`, `requirements.txt` file, and configuration files. They are deployed on a Docker network.
 
-In addition to the microservices, the project includes the following components which run outside of Docker:
+## Directory Structure
 
-### Drone Simulation Models
+- **microservices**: Each one of the previous mentioned microservices ha its own directory in the root repository.
+- **docker-compose**: Contains the `docker-compose.yml` file used to orchestrate the running of the microservices.
+- **mqtt-tester**: Contains the models which simulate the drones (`drone_device_#.py`).
+- **notification_client**: Contains the notification socket client (`notification_client.py`).
 
-- **Location:** `mqtt-tester/`
-- **Files:** `drone_device_#.py` (where `#` represents individual drone simulation scripts)  
-- **Purpose:** Simulate the drones used for monitoring
+## Running the System
 
-### Notification Socket Client
+### Step 1: Run Docker Compose
 
-- **Location:** `notification_client/`
-- **File:** `notification_client.py`
-- **Purpose:** Deployed locally on the machine, this client receives socket notifications and visualizes them on your computer
+Navigate to the `docker-compose` directory and run the following command to start all the microservices:
 
-## Deployment & Execution
-
-### Orchestrating with Docker Compose
-
-The microservices are orchestrated via Docker Compose. The Docker Compose configuration file is located in the `docker-compose/` directory.
-
-To start the containerized services, run:
-
-```bash
-docker-compose -f docker-compose/docker-compose.yml up --build
+```sh
+docker-compose up --build
 ```
 
-### Running the Notification Client
+### Step 2: Run the Notification Client
 
-In a separate terminal, start the notification client by running:
+Run the `notification_client.py` script locally on your machine to receive socket notifications and visualize them on the computer:
 
-```bash
+```sh
 python notification_client/notification_client.py
 ```
 
-### Running the Drone Simulation
+### Step 3: Run the Drones Script
 
-Depending on your operating system, run the drone simulation scripts as follows:
+You can run the drones script using a single command. For Linux and macOS, use the bash script `drones_runner_test.sh`:
 
-- **Linux/Mac:**  
-  Execute the bash script:
-  ```bash
-  ./drones_runner_test.sh
-  ```
-- **Windows:**  
-  Run the Python script:
-  ```bash
-  python drones_runner_test.py
-  ```
-
-## Repository Structure
-
-```
-iot_sheeps_project/
-├── docker-compose/
-│   └── docker-compose.yml
-├── data-fetcher/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── config.yml
-├── drone_control/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── config.yml
-├── gateway-http-mqtt/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── config.yml
-├── http-api/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── config.yml
-├── localization_service/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── config.yml
-├── mqtt-broker/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── config.yml
-├── notification_microservice/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── config.yml
-├── system_monitoring_service/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── config.yml
-├── mqtt-tester/
-│   ├── drone_device_1.py
-│   ├── drone_device_2.py
-│   └── ... (other drone simulation scripts)
-├── notification_client/
-│   └── notification_client.py
-├── drones_runner_test.sh    # For Linux/Mac
-└── drones_runner_test.py    # For Windows
+```sh
+./drones_runner_test.sh
 ```
 
-## Prerequisites
+For Windows, use the Python script `drones_runner_test.py`:
 
-- **Docker** and **Docker Compose** must be installed to run the containerized microservices.
-- **Python 3.x** is required for running the notification client and the drone simulation scripts.
-- **Bash shell** (for Linux/Mac users) to execute the `drones_runner_test.sh` script.
+```sh
+python drones_runner_test.py
+```
 
+## Components Not in Containers
 
-## Contact
+- **Models which simulate the drones**: Located in `mqtt-tester/drone_device_#.py`.
+- **Notification socket client**: Located in `notification_client/notification_client.py`.
 
-For questions or support, please contact [autonomous_shepherding_service@hotmail.com].
+These components are deployed locally on the machine.
+
+## Conclusion
+
+This project demonstrates the use of a microservice architecture for managing a fleet of drones used for sheep grazing monitoring. By leveraging Docker for containerization and Docker Compose for orchestration, the system is easily deployable and scalable across multiple platforms.
