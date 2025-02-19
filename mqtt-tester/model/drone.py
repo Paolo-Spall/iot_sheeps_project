@@ -20,6 +20,7 @@ class Drone:
         self.device_type = "drone"
         self.manufacturer = "DJI"
         self.software_version = "6.4.3"
+        self.battery_level = 85
 
         self.image_processing_sensor = ImageProcessingSensor()
         self.environmental_sensor = EnvironmentalSensor()

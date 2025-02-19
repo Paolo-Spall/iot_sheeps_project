@@ -10,6 +10,7 @@ class DataManager:
     flock_timeseries_data = []   #Telemetry aggiornata istante per istante
     drones_timeseries_data = []   #Telemetry aggiornata istante per istante
     environmental_data = []
+    
 
     def add_device_telemetry_data_by_device_id(self, device_id, telemetry_data):
         """Add a new telemetry data for a given device"""

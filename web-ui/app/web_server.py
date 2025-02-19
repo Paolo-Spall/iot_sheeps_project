@@ -38,6 +38,7 @@ class WebServer:
         self.app = Flask(__name__, template_folder=template_dir)
 
         # Add URL rules to the Flask app mapping the URL to the function
+        self.app.add_url_rule('/home', 'home', self.info)
         self.app.add_url_rule('/position/flock_center', 'telemetry', self.telemetry)
         self.app.add_url_rule('/position/drones_center', 'telemetry_d', self.telemetry_d)
         self.app.add_url_rule('/environment', 'environment', self.environment)
@@ -191,3 +192,22 @@ class WebServer:
 
         # Wait for the server thread to join
         self.server_thread.join()
+
+
+    def info(self):
+        info_data = self.http_get_device_info()
+        return render_template('home.html', info_data=info_data)
+    
+    def http_get_device_info(self):
+        """ Get all locations from the remote server over HTTP"""
+
+        # Get the base URL from the configuration
+        base_http_url = self.configuration_dict['web']['api_base_url']
+        target_url = f'{base_http_url}/info'
+
+        # Send the GET request
+        response_string = requests.get(target_url)
+
+        # Return the JSON response
+        return response_string.json()
+    
