@@ -107,7 +107,7 @@ def process_control(client):
         data_collector.remove_point()
         if not data_collector.get_points_list()["mission_points"]:
             print("Missione completata")
-            client.disconnect()
+            #client.disconnect()
             return
  
     # Calcolo del controllo di tracking del centro (u_center)
