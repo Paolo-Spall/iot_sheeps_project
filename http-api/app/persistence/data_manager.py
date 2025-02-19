@@ -10,6 +10,7 @@ class DataManager:
     flock_timeseries_data = []   #Telemetry aggiornata istante per istante
     drones_timeseries_data = []   #Telemetry aggiornata istante per istante
     environmental_data = []
+    info_data = {}
     
 
     def add_device_telemetry_data_by_device_id(self, device_id, telemetry_data):
@@ -47,6 +48,19 @@ class DataManager:
             self.environmental_data.append(payload)
         else:
             self.environmental_data[0] = payload
+
+    def update_info_data(self, device_id, payload):
+        """Add a new telemetry data for a given device"""
+        if not isinstance(device_id, str):
+            raise ValueError(f"device_id must be a string, got {type(device_id)}: {device_id}")
+
+        if device_id not in self.info_data:
+            self.info_data[device_id] = []
+        self.info_data[device_id] = payload
+
+    def get_info_data(self, device_id):
+        """Return the telemetry data for a given device"""
+        return self.info_data
     
     def init_mission(self):
         self.data_manager_dict['mission'] = {}

@@ -16,3 +16,5 @@ docker run --name=system_monitoring_service_cnt --network iot_network -v .\targe
 docker stop system_monitoring_service_cnt
 docker rm system_monitoring_service_cnt
 cd ..
+cd notification_microservice
+docker build -t notification_microservice_img:0.1 .

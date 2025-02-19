@@ -41,7 +41,8 @@ class Drone:
             "name": self.name,
             "device_type": self.device_type,
             "manufacturer": self.manufacturer,
-            "software_version": self.software_version
+            "software_version": self.software_version,
+            "battery_level": self.battery_level
         })
 
     def get_gps_data(self):

@@ -13,11 +13,11 @@ configuration_dict = {
     "target_telemetry_topic": "service/flock_localization/flock_center",
     "target_telemetry_d_topic": "service/flock_localization/drones_center_gps",
     "target_environment_topic": "service/sys_monitoring/env",
-    "target_battery_topic": "drone/+/telemetry/battery",
+    "target_info_topic": "drone/+/info",
     "device_api_url": "http://127.0.0.1:7070/api/v1/iot/inventory/position/flock_center",
     "drones_center_api_url": "http://127.0.0.1:7070/api/v1/iot/inventory/position/drones_center",
     "environment_api_url": "http://127.0.0.1:7070/api/v1/iot/inventory/environment",
-    "batteries_api_url": "http://127.0.0.1:7070/api/v1/iot/inventory/batteries"
+    "info_api_url": "http://127.0.0.1:7070/api/v1/iot/inventory"
 }
 
 # Read Configuration from target Configuration File Path
@@ -39,21 +39,21 @@ mqtt_broker_port = configuration_dict["broker_port"]
 mqtt_topic = configuration_dict["target_telemetry_topic"]
 mqtt_topic_d = configuration_dict["target_telemetry_d_topic"]
 mqtt_topic_env = configuration_dict["target_environment_topic"]
-mqtt_topic_batteries = configuration_dict["target_battery_topic"]
+mqtt_topic_info = configuration_dict["target_info_topic"]
 
 
 # HTTP API Configuration
 api_url = configuration_dict["device_api_url"]
 drones_center_api_url = configuration_dict["drones_center_api_url"]
 env_api_url = configuration_dict["environment_api_url"]
-bat_api_url = configuration_dict["batteries_api_url"]
+info_api_url = configuration_dict["info_api_url"]
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to MQTT Broker with result code " + str(rc))
     client.subscribe(mqtt_topic)
     client.subscribe(mqtt_topic_d)
     client.subscribe(mqtt_topic_env)
-    client.subscribe(mqtt_topic_batteries)
+    client.subscribe(mqtt_topic_info)
 
 def on_message(client, userdata, msg):
 
@@ -128,6 +128,36 @@ def on_message(client, userdata, msg):
                 "temperature_value": payload_dict["temperature_value"],
                 "humidity": payload_dict["humidity"],
                 "rain_probability": payload_dict["rain_probability"]
+            }
+
+            create_device_response = requests.put(telemetry_device_url, json=device_telemetry_payload)
+
+            if create_device_response.status_code == 201:
+                print(f"Device Telemetry {device_id} registered successfully.")
+            else:
+                print(f"Failed to register telemetry {device_id}. Status code: {create_device_response.status_code} Response: {create_device_response.text}")
+
+        except Exception as e:
+            print(f"Error processing MQTT message: {str(e)}")
+
+    if mqtt.topic_matches_sub(mqtt_topic_info, msg.topic):
+        try:
+
+            payload_dict = json.loads(msg.payload.decode())
+            device_id = msg.topic.split('/')[1]
+
+            # Check if the device exists in the inventory
+            telemetry_device_url = f"{info_api_url}/info/{device_id}"
+
+            print(f'Drones info: {device_id} Sending HTTP POST Request to: {telemetry_device_url}')
+
+            device_telemetry_payload = {
+                "id": payload_dict["id"],
+                "name": payload_dict["name"],
+                "device_type": payload_dict["device_type"],
+                "manufacturer": payload_dict["manufacturer"],
+                "software_version": payload_dict["software_version"],
+                "battery_level": payload_dict["battery_level"]
             }
 
             create_device_response = requests.put(telemetry_device_url, json=device_telemetry_payload)
