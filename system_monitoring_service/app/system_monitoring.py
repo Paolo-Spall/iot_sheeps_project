@@ -93,7 +93,7 @@ def on_message(client, userdata, msg):
                     "timestamp": int(time.time())
                 }
 
-                print("Telemetry Published. Temperature=",avg_telemetry_payload["temperature_value"])
+                print("Published telemetry")
                 client.publish(mqtt_publish, json.dumps(avg_telemetry_payload))
                 data_collector.delete_last_device_data()
                 notification_service(client,avg_value,data)

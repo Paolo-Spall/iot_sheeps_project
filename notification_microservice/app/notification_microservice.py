@@ -4,6 +4,9 @@ import paho.mqtt.client as mqtt
 from service_message import ServiceMessage
 from json import JSONDecodeError
 import threading
+import yaml
+
+CONF_FILE_PATH = "notification_microservice_conf.yaml"
 
 # MQTT
 broker_ip = "127.0.0.1"
@@ -11,8 +14,28 @@ broker_port = 1883
 subscribe_topic = "notification"
 
 # Socket
-HOST = '127.0.0.1'
+HOST = '0.0.0.0'
 PORT = 65432
+
+# Read Configuration from target Configuration File Path
+def read_configuration_file():
+    global configuration_dict
+
+    with open(CONF_FILE_PATH, 'r') as file:
+        configuration_dict = yaml.safe_load(file)
+
+    return configuration_dict
+
+configuration_dict = read_configuration_file()
+
+# MQTT
+broker_ip = configuration_dict["mqtt"]["broker_ip"]
+broker_port = configuration_dict["mqtt"]["broker_port"]
+subscribe_topic = configuration_dict["mqtt"]["subscribe_topic"]
+
+# Socket
+HOST = configuration_dict["socket"]["server"]["host"]
+PORT = configuration_dict["socket"]["server"]["port"]
 
 # Variabile globale per il client connesso
 client_conn = None

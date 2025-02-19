@@ -1,9 +1,9 @@
 mqtt:
-  broker_ip: "my-mosquitto-broker"  
+  broker_ip: "127.0.0.1"  
   broker_port: 1883                 
   subscribe_topic: "notification"   
 
 socket:
   server:
-    host: "127.0.0.1"               
+    host: "0.0.0.0"               
     port: 65432

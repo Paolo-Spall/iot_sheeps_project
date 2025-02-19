@@ -1,7 +1,10 @@
 FROM python:3.9-slim-buster
 
+# Install system dependencies including tkinter
+RUN apt-get update && apt-get install -y python3-tk && rm -rf /var/lib/apt/lists/*
+
 # Copy Application Files & Requirements to /app
-COPY app /app
+COPY ./app /app
 COPY requirements.txt /app/requirements.txt
 
 # Set the target container working directory to /app
