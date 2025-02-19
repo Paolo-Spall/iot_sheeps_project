@@ -68,7 +68,7 @@ def on_message(client, userdata, msg):
 
 # Funzione per avviare il client MQTT
 def start_mqtt_client():
-    client = mqtt.Client()
+    client = mqtt.Client("NotificationMicroserviceMqttClient")
     client.on_connect = on_connect
     client.on_message = on_message
     client.connect(broker_ip, broker_port, 60)
