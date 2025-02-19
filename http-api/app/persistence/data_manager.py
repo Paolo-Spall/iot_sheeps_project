@@ -60,6 +60,9 @@ class DataManager:
 
     def get_info_data(self, device_id):
         """Return the telemetry data for a given device"""
+        return self.info_data[device_id]
+
+    def get_info(self):
         return self.info_data
     
     def init_mission(self):

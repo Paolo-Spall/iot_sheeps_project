@@ -152,7 +152,7 @@ def on_message(client, userdata, msg):
             print(f'Drones info: {device_id} Sending HTTP POST Request to: {telemetry_device_url}')
 
             device_telemetry_payload = {
-                "id": payload_dict["id"],
+                "device_id": payload_dict["id"],
                 "name": payload_dict["name"],
                 "device_type": payload_dict["device_type"],
                 "manufacturer": payload_dict["manufacturer"],

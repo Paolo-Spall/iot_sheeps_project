@@ -2,10 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Devices for Location {{ location_id }}</title>
+    <title>Drones information</title>
+    <style>
+        .link-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .link-box {
+            padding: 10px;
+            border: 2px solid #000;
+            border-radius: 5px;
+            text-align: center;
+            width: 300px;
+            background-color: #f8f8f8;
+        }
+        .link-box a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #007BFF;
+        }
+        .link-box a:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Devices for Location {{ location_id }}: {{ devices|length }}</h1>
+    <h1>Number of drones : {{ info_data|length }}</h1>
     <table border="1">
         <tr>
             <th>ID</th>
@@ -15,16 +39,23 @@
             <th>Version</th>
             <th>Battery [%]</th>
         </tr>
-        {% for device in devices %}
+        {% for drone in info_data %}
         <tr>
-            <td>{{ device.uuid }}</td>
-            <td>{{ device.name }}</td>
-            <td>{{ device.type }}</td>
-            <td>{{ device.manufacturer }}</td>
-            <td>{{ device.software_version }}</td>
-            <td>{{ device.battery }}</td>
+            <td>{{ drone.device_id }}</td>
+            <td>{{ drone.name }}</td>
+            <td>{{ drone.device_type }}</td>
+            <td>{{ drone.manufacturer }}</td>
+            <td>{{ drone.software_version }}</td>
+            <td>{{ drone.battery_level }}</td>
         </tr>
         {% endfor %}
     </table>
+
+    <div class="link-container">
+        <div class="link-box"><a href="http://127.0.0.1:7071/position/flock_center">Flock center telemetry</a></div>
+        <div class="link-box"><a href="http://127.0.0.1:7071/position/drones_center">Drones center telemetry</a></div>
+        <div class="link-box"><a href="http://127.0.0.1:7071/controls">Fleet manager</a></div>
+        <div class="link-box"><a href="http://127.0.0.1:7071/environment">Environmental telemetry data</a></div>
+    </div>
 </body>
 </html>

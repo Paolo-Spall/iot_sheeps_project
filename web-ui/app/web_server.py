@@ -195,7 +195,8 @@ class WebServer:
 
 
     def info(self):
-        info_data = self.http_get_device_info()
+        info_data = self.http_get_device_info().values()
+        print(info_data)
         return render_template('drone_info_battery.html', info_data=info_data)
     
     def http_get_device_info(self):

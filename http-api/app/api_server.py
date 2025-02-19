@@ -7,6 +7,7 @@ from resources.flock_center_resource import FlockCenterResource
 from resources.drones_center_resource import DronesCenterResource
 from resources.environment_resource import EnvironmentResource
 from resources.drone_info_resource import DroneInfo
+from resources.drones_info_resource import DronesInfo
 import yaml
 
 # Default Values
@@ -90,6 +91,11 @@ api.add_resource(DroneInfo, configuration_dict['rest']['api_prefix'] + '/info/<s
                       resource_class_kwargs={'data_manager': data_manager},
                       endpoint="info_data",
                       methods=['GET', 'PUT'])
+
+api.add_resource(DronesInfo, configuration_dict['rest']['api_prefix'] + '/info',
+                      resource_class_kwargs={'data_manager': data_manager},
+                      endpoint="info",
+                      methods=['GET'])
 
 if __name__ == '__main__':
 
