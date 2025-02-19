@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Environmental conditions</title>
+</head>
+<body>
+    <h1>Environmental conditions</h1>
+    {% if telemetry_data %}
+    <table border="1">
+        <tr>
+            <th>Timestamp</th>
+            <th>Temperature [°C]</th>
+            <th>Humidity [%]</th>
+            <th>Rain probability [1-5]</th>
+
+        </tr>
+        {% for telemetry in telemetry_data %}
+        <tr>
+            <td>{{ telemetry.timestamp }}</td>
+            <td>{{ telemetry.temperature_value}}</td>
+            <td>{{ telemetry.humidity }}</td>
+            <td>{{ telemetry.rain_probability }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No telemetry data available for environment.</p>
+    {% endif %}
+</body>
+</html>

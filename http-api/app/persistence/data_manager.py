@@ -9,6 +9,7 @@ class DataManager:
     data_manager_dict = {}   #Lista di punti di missione
     flock_timeseries_data = []   #Telemetry aggiornata istante per istante
     drones_timeseries_data = []   #Telemetry aggiornata istante per istante
+    environmental_data = []
 
     def add_device_telemetry_data_by_device_id(self, device_id, telemetry_data):
         """Add a new telemetry data for a given device"""
@@ -36,6 +37,15 @@ class DataManager:
 
     def get_drones_data(self):
         return self.drones_timeseries_data
+
+    def get_environmental_data(self):
+        return self.environmental_data
+
+    def update_environmental_data(self, payload):
+        if len(self.environmental_data) == 0:
+            self.environmental_data.append(payload)
+        else:
+            self.environmental_data[0] = payload
     
     def init_mission(self):
         self.data_manager_dict['mission'] = {}

@@ -1,5 +1,4 @@
 import paho.mqtt.client as mqtt
-from model.message_descriptor import MessageDescriptor
 import json
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -13,7 +12,6 @@ def on_connect(client, userdata, flags, rc):
 # Define a callback method to receive asynchronous messages
 def on_message(client, userdata, message):
     message_payload = str(message.payload.decode("utf-8"))
-    #message_descriptor = MessageDescriptor(**json.loads(message_payload))
 
     if mqtt.topic_matches_sub(topic_drone_01, message.topic):
         print("Message received for Drone 01, topic:", message.topic)
@@ -27,7 +25,7 @@ client_id = "clientId0001-Consumer"
 broker_ip = "127.0.0.1"
 broker_port = 1883
 # Filtri aggiornati per i dati ambientali, GPS e di elaborazione immagine
-topic_drone_01 = "drone/d0001/telemetry/gps"
+topic_drone_01 = "/#"
 
 
 # Create a new MQTT Client
