@@ -16,7 +16,11 @@ class Drone:
 
     def __init__(self, id):
         self.id = id
+        self.name = f"Drone_{id}"
         self.device_type = "drone"
+        self.manufacturer = "DJI"
+        self.software_version = "6.4.3"
+
         self.image_processing_sensor = ImageProcessingSensor()
         self.environmental_sensor = EnvironmentalSensor()
 
@@ -28,6 +32,16 @@ class Drone:
         print(control_input)
         control_velocity = np.array(control_input) * self.dt
         self.position = self.position + np.clip(control_velocity, -self.max_velocity, self.max_velocity)
+
+
+    def get_drone_info(self):
+        return json.dumps({
+            "id": self.id,
+            "name": self.name,
+            "device_type": self.device_type,
+            "manufacturer": self.manufacturer,
+            "software_version": self.software_version
+        })
 
     def get_gps_data(self):
         """ Converte x, y in latitudine e longitudine, mantenendo z come altitudine """

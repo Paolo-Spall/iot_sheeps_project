@@ -14,6 +14,7 @@ broker_port = 1883
 default_topic_publish = f"drone/{drone_id}/"
 #message_limit = 1000
 
+topic_info = f"drone/{drone_id}/info"  # Nuovo topic per le informazioni del drone
 topic_cartesian_publish = f"drone/{drone_id}/telemetry/cartesian"  # Nuovo topic per il sensore di elaborazione immagine
 topic_gps_publish = f"drone/{drone_id}/telemetry/gps"  # Nuovo topic per il GPS
 topic_image_processing_publish = f"drone/{drone_id}/telemetry/image_processing"  # Nuovo topic per il sensore di elaborazione immagine
@@ -79,6 +80,8 @@ def on_message(client, userdata, msg):
             print(
                 f"📤 Publishing to topic {topic_environmental_data_publish} with data: {drone.get_environmental_data()}")
             client.publish(topic_environmental_data_publish, drone.get_environmental_data())
+            print(f"📤 Publishing to topic {topic_info} with data: {drone.get_drone_info()}")
+            client.publish(topic_info, drone.get_drone_info(), retain=True)
 
         except Exception as e:
             print(f"Error publishing MQTT message: {str(e)}")
