@@ -1,5 +1,0 @@
-socket:
-  client:
-    host: "notification_microservice"               
-    port: 65432                      
-

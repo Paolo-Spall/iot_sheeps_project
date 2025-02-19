@@ -1,3 +1,0 @@
-http://localhost:7071/device/d0001/telemetry
-
-http://localhost:7071/controls
