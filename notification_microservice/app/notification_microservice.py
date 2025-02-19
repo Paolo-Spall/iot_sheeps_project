@@ -88,27 +88,27 @@ def start_tcp_server():
             print(f"TCP Client Connected: {addr}")
             client_conn = conn
 
-            try:
-                while True:
-                    data = conn.recv(1024)
-                    if not data:
-                        print("Client disconnected.")
-                        client_conn = None
-                        break
+            # try:
+            #     while True:
+            #         data = conn.recv(1024)
+            #         if not data:
+            #             print("Client disconnected.")
+            #             client_conn = None
+            #             break
 
-                    try:
-                        # Decodifica JSON
-                        received_json = json.loads(data.decode('utf-8'))
-                        print(f"Received JSON from TCP Client: {received_json}")
-                        conn.sendall(str.encode("OK"))
+            #         try:
+            #             # Decodifica JSON
+            #             received_json = json.loads(data.decode('utf-8'))
+            #             print(f"Received JSON from TCP Client: {received_json}")
+            #             conn.sendall(str.encode("OK"))
 
-                    except JSONDecodeError:
-                        print("Invalid JSON received from TCP Client")
-                        conn.sendall(str.encode("KO"))
+            #         except JSONDecodeError:
+            #             print("Invalid JSON received from TCP Client")
+            #             conn.sendall(str.encode("KO"))
 
-            except:
-                client_conn = None
-                break
+            # except:
+            #     client_conn = None
+            #     break
 
 # Funzione principale
 def main():

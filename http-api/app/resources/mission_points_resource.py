@@ -24,14 +24,14 @@ class MissionPoints(Resource):
             mission_type = location_update_request.mission_type
             mission_points = location_update_request.mission_points
 
-        except Exception as e:
-            return json.dumps({'error': f"Data format error ! Reason: {str(e)}"}), 400
+        except:
+            return json.dumps({'error': "Data format error ! Reason: "}), 400
         try:
             print('before saving mission')
             self.data_manager.update_mission(mission_type, mission_points)
             print('after saving mission')
-        except Exception as e:
-            return json.dumps({'error': f"Error in storing data ! Reason: {str(e)}"}), 500
+        except:
+            return json.dumps({'error': "Error in storing data ! Reason: "}), 500
         
         # Send the PUT request
         response = requests.put(self.gateway_url, json=location_update_request.to_json())
