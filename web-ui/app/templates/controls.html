@@ -12,14 +12,13 @@
                             [50,  -100, 20],
                             [0,   -100, 20],
                             [0,   -50,  20],
-                            [0,    0,   20]]
-        
-        const pointsHome = [[0, 0, 20]]
+                            [0,    0,   20]];
 
-        const pointsAbort = []
+        const pointsHome = [[0, 0, 20]];
+        const pointsAbort = [];
 
-        async function sendControlPutRequest(points, mission_type) {
-            const responseDiv = document.getElementById("response");
+        async function sendControlPutRequest(points, mission_type, resp_label) {
+            const responseDiv = document.getElementById("resp_label"); // Corretto id
 
             try {
                 const response = await fetch("/controls/button-input-points", {
@@ -31,7 +30,7 @@
                 });
 
                 const result = await response.json();
-                responseDiv.innerText = result.message || result.error;
+                responseDiv.innerText = result.message || result.error || resp_label;
             } catch (error) {
                 responseDiv.innerText = "Error sending request.";
             }
@@ -39,19 +38,19 @@
     </script>
 </head>
 <body>
-    <h1>Chose the Control action:</h1>
-    
+    <h1>Choose the Control action:</h1>
+
     <label>Mission points:</label>
     <table border="1">
         <tr>
-            <th>point 1</th>
-            <th>point 2</th>
-            <th>point 3</th>
-            <th>point 4</th>
-            <th>point 5</th>
-            <th>point 6</th>
-            <th>point 7</th>
-            <th>point 8</th>
+            <th>Point 1</th>
+            <th>Point 2</th>
+            <th>Point 3</th>
+            <th>Point 4</th>
+            <th>Point 5</th>
+            <th>Point 6</th>
+            <th>Point 7</th>
+            <th>Point 8</th>
         </tr>
         <tr>
             <td>50, 0, 20</td>
@@ -64,10 +63,10 @@
             <td>0, 0, 20</td>
         </tr>
     </table>
-    <button onclick="sendControlPutRequest(pointsSet1, 'grazing')">Set Mission points</button>
-    <button onclick="sendControlPutRequest(pointsHome, 'return_home')">Return Home</button>
-    <button onclick="sendControlPutRequest(pointsAbort, 'no_mission')">Abort Mission</button>
+    <button onclick="sendControlPutRequest(pointsSet1, 'grazing', 'Mission set correctly')">Set Mission Points</button>
+    <button onclick="sendControlPutRequest(pointsHome, 'return_home', 'Mission set correctly')">Return Home</button>
+    <button onclick="sendControlPutRequest(pointsAbort, 'no_mission', 'Mission stopped')">Abort Mission</button>
 
-    <p id="response"></p>
+    <p id="resp_label"></p>
 </body>
 </html>
