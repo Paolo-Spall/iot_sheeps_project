@@ -30,7 +30,6 @@ class Drone:
     def update_position(self, control_input, dt=None):
         if dt is None:
             dt = self.dt
-        print(control_input)
         control_velocity = np.array(control_input) * self.dt
         self.position = self.position + np.clip(control_velocity, -self.max_velocity, self.max_velocity)
 

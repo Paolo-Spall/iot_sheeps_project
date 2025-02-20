@@ -26,7 +26,10 @@ drone = Drone(drone_id)
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
-    print("Connected to MQTT Broker with result code " + str(rc))
+    dorne_info = json.loads(drone.get_drone_info())
+    print(f"Drone {dorne_info['id']} connected to MQTT Broker with result code " + str(rc))  
+    print(f"📤 Publishing to topic {topic_info}")
+    client.publish(topic_info, drone.get_drone_info(), retain=True)
     client.subscribe(topic_control_input_subscribe)
     client.publish(topic_cartesian_publish, drone.get_drone_position())
     client.publish(topic_gps_publish, drone.get_gps_data())
@@ -42,12 +45,12 @@ mqtt_client.connect(broker_ip, broker_port)
 
 def on_message(client, userdata, msg):
     if mqtt.topic_matches_sub(topic_control_input_subscribe, msg.topic):
-        print(f"📥 Message received: {msg.topic} -> {msg.payload.decode()}")  # Aggiungi questa riga
+
         try:
             payload_dict = json.loads(msg.payload.decode())
 
             # Stampa la struttura del payload per il debug
-            print(f"Payload received: {payload_dict} - Type: {type(payload_dict)}")
+            print(f"Payload received- Topic: {msg.topic} - Type: {payload_dict['data_type']}")
 
             # Se il payload è una lista
             if isinstance(payload_dict, list):
@@ -61,7 +64,7 @@ def on_message(client, userdata, msg):
                 control_input = [payload_dict.get('u_x'), payload_dict.get('u_y'), payload_dict.get('u_z')]
             else:
                 raise ValueError("Invalid payload structure")
-            print(f"Received control input: {control_input} - type: {type(control_input)}")
+           
 
         except Exception as e:
             print(f"Error processing MQTT message: {str(e)}")
@@ -70,18 +73,14 @@ def on_message(client, userdata, msg):
         drone.read_sensors()
 
         try:
-            print(f"📤 Publishing to topic {topic_cartesian_publish} with data: {drone.get_drone_position()}")
+            print("📤 Publishing telemetry")
             client.publish(topic_cartesian_publish, drone.get_drone_position())
-            print(f"📤 Publishing to topic {topic_gps_publish} with data: {drone.get_gps_data()}")
-            client.publish(topic_gps_publish, drone.get_gps_data())
-            print(
-                f"📤 Publishing to topic {topic_image_processing_publish} with data: {drone.get_image_processing_data()}")
+            #print(f"📤 Publishing to topic {topic_gps_publish}")
+            #client.publish(topic_gps_publish, drone.get_gps_data())
+            #print(f"📤 Publishing to topic {topic_image_processing_publish}")
             client.publish(topic_image_processing_publish, drone.get_image_processing_data())
-            print(
-                f"📤 Publishing to topic {topic_environmental_data_publish} with data: {drone.get_environmental_data()}")
+            #print(f"📤 Publishing to topic {topic_environmental_data_publish}")
             client.publish(topic_environmental_data_publish, drone.get_environmental_data())
-            print(f"📤 Publishing to topic {topic_info} with data: {drone.get_drone_info()}")
-            client.publish(topic_info, drone.get_drone_info(), retain=True)
 
         except Exception as e:
             print(f"Error publishing MQTT message: {str(e)}")
